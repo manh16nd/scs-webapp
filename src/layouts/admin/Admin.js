@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import NewSchool from './NewSchool'
 import ListSupporters from './ListSupporters'
 import Messages from './Messages'
+import EditSchool from './EditSchool'
 
 class Admin extends Component {
     constructor(props) {
@@ -25,8 +26,8 @@ class Admin extends Component {
     updateSchool = (snap) => {
         this.setState(({school}) => ({
             school: {
-                [snap.key]: snap.val(),
                 ...school,
+                [snap.key]: snap.val(),
             }
         }))
     }
@@ -58,8 +59,19 @@ class Admin extends Component {
         })
     }
 
+    editSchool = (key, school) => () => {
+        if (!key || !school) return this.setState({
+            editSchool: null
+        })
+        this.setState({
+            editSchool: {
+                key, school
+            }
+        })
+    }
+
     render() {
-        const {school, selectedSchool, addNewSchool, messages} = this.state
+        const {school, selectedSchool, addNewSchool, messages, editSchool} = this.state
 
         return (
             <div className="Admin">
@@ -75,6 +87,12 @@ class Admin extends Component {
                     <NewSchool
                         open={addNewSchool}
                         toggle={this._addNewSchool}
+                        school={school}
+                        {...this.props}
+                    />
+                    <EditSchool
+                        open={editSchool}
+                        toggle={this.editSchool()}
                         school={school}
                         {...this.props}
                     />
@@ -131,6 +149,11 @@ class Admin extends Component {
                                 onClick={this.clickSchool(s)}
                             >
                                 Quản lý tư vấn viên
+                            </Button>
+                            <Button
+                                onClick={this.editSchool(s, school[s])}
+                            >
+                                Sửa thông tin trường
                             </Button>
                         </div>)}
                 </div>

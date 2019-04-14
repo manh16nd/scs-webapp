@@ -10,7 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import * as firebase from 'firebase'
 
-class NewSchool extends Component {
+class EditSchool extends Component {
     state = {
         form: {
             name: '',
@@ -24,6 +24,20 @@ class NewSchool extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.open) {
+            if (!prevProps.open || prevProps.open.key !== this.props.open.key) {
+                this.setState({
+                    form: {
+                        ...this.state.form,
+                        ...this.props.open.school,
+                        key: this.props.open.key,
+                    }
+                })
+            }
+        }
+    }
+
     handleClose = () => {
         this.props.toggle()
     }
@@ -31,7 +45,7 @@ class NewSchool extends Component {
     handleSave = () => {
         const {form} = this.state
         const {school} = this.props
-        if (school[form.key]) alert('Mã trường trùng lặp')
+
         firebase.database().ref(this.props.DB_PREFIX + '/groups').set({
             ...school,
             [form.key]: {
@@ -101,6 +115,7 @@ class NewSchool extends Component {
                             label="Mã trường"
                             value={form.key}
                             fullWidth
+                            disabled
                         />
                         <TextField
                             margin="dense"
@@ -156,7 +171,7 @@ class NewSchool extends Component {
                             Hủy
                         </Button>
                         <Button variant="contained" onClick={this.handleSave} color="primary">
-                            Thêm trường
+                            Sửa thông tin trường
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -165,4 +180,4 @@ class NewSchool extends Component {
     }
 }
 
-export default NewSchool
+export default EditSchool
