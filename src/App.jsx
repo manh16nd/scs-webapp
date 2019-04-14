@@ -22,7 +22,7 @@ const styles = {
     },
 }
 
-const DB_PREFIX = 'z_pagetuyensinh'
+const DB_PREFIX = 'pagetuyensinh'
 
 const config = {
     apiKey: 'AIzaSyBxBvZZPxo06HQWHWudRGytuJoSNw5LNX8',
