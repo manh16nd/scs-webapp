@@ -161,6 +161,8 @@ class App extends Component {
                     app: this.state,
                     changeState: this._changeState,
                     register: this._register,
+                    removeTempKeys: this.removeTempKeys,
+                    decodeFirebaseArray: this.decodeFirebaseArray,
                 }}
             >
                 {this.renderApp()}

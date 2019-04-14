@@ -12,7 +12,7 @@ const server = 'http://nuichatbot-1.herokuapp.com'
 class Supporter extends Component {
     constructor(props) {
         super(props)
-        var currentGroup = this.props.user.group
+        const currentGroup = this.props.user.group
 
         this.convRef = firebase.database()
             .ref(this.props.DB_PREFIX + '/conversations/group/' + currentGroup)
