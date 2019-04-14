@@ -49,7 +49,7 @@ class Register extends Component {
             <div className="Register">
                 <div className="container">
                     <div className="card card-body Card">
-                        <small className={'text-muted'}>Trước tiên, bạn phải đăng ký tài khoản trước</small>
+                        <small className={'text-muted'}>Trước tiên, bạn phải đăng ký thông tin tài khoản trước</small>
                         <label htmlFor={'email'}>Email</label>
                         <input
                             className={'form-control'}

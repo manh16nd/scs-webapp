@@ -47,8 +47,8 @@ class Supporter extends Component {
         const conversation = snap.val() || {}
         conversation.$tid = snap.key
 
-        if (conversation.status != 2 && conversation.status != 3) return
-        if (conversation.group != userData.group) return
+        if (conversation.status !== 2 && conversation.status !== 3) return
+        if (conversation.group !== userData.group) return
 
         var isnew = false
         const newConversations = this.state.conversations.map(c => {
@@ -116,24 +116,24 @@ class Supporter extends Component {
                         <div className={'Textt'}>{m.text}</div>
                     </div>
                 </div>)}
-                <div className={'Text'}>
-                    <form className={'FormMessage'} onSubmit={this._onSubmit(open)}>
-                        <div className={'Actions'}>
-                            <button>
-                                <Icon>send
-                                </Icon>
-                            </button>
-                        </div>
-                        <input className={'form-control'} placeholder={'Gửi tin nhắn'} value={this.state.text}
-                               onChange={e => this.setState({text: e.target.value})}/>
-                        <div className={'SendIcon'}>
-                            <button type={'submit'}>
-                                <Icon>send
-                                </Icon>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            </div>
+            <div className={'Text'}>
+                <form className={'FormMessage'} onSubmit={this._onSubmit(open)}>
+                    <div className={'Actions'}>
+                        <button>
+                            <Icon>send
+                            </Icon>
+                        </button>
+                    </div>
+                    <input className={'form-control'} placeholder={'Gửi tin nhắn'} value={this.state.text}
+                           onChange={e => this.setState({text: e.target.value})}/>
+                    <div className={'SendIcon'}>
+                        <button type={'submit'}>
+                            <Icon>send
+                            </Icon>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     }

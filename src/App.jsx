@@ -7,6 +7,7 @@ import Register from './containers/register/Register'
 import Init from './containers/init/Init'
 import Supporter from './layouts/supporter/Supporter'
 import Admin from './layouts/admin/Admin'
+import NewUser from './containers/new-user/NewUser'
 
 const styles = {
     root: {
@@ -52,6 +53,10 @@ class App extends Component {
         const urlParams = new URLSearchParams(window.location.search)
         const email = urlParams.get('email')
         const password = urlParams.get('password')
+
+        if (!email) return this.setState({
+            appState: 'new_user'
+        })
 
         this.setState({
             appState: 'loading',
@@ -146,11 +151,13 @@ class App extends Component {
             ...this.props,
             ...this.state,
         }
+        if (appState === 'new_user') return <NewUser {...combinedProps}/>
         if (appState === 'loading') return <p>loading</p>
         if (appState === 'init') return <Init/>
         if (appState === 'register') return <Register {...combinedProps}/>
         if (appState === 'supporter') return <Supporter {...combinedProps}/>
         if (appState === 'admin') return <Admin {...combinedProps}/>
+        return null
     }
 
     render() {
@@ -163,6 +170,7 @@ class App extends Component {
                     register: this._register,
                     removeTempKeys: this.removeTempKeys,
                     decodeFirebaseArray: this.decodeFirebaseArray,
+                    DB_PREFIX,
                 }}
             >
                 {this.renderApp()}
