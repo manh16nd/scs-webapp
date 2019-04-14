@@ -6,6 +6,11 @@ import Icon from '@material-ui/core/Icon'
 import AppContext from '../../AppContext'
 import * as firebase from 'firebase'
 import axios from 'axios'
+import {animateScroll} from 'react-scroll'
+import ButtonDropdown from 'reactstrap/es/ButtonDropdown'
+import DropdownToggle from 'reactstrap/es/DropdownToggle'
+import DropdownMenu from 'reactstrap/es/DropdownMenu'
+import DropdownItem from 'reactstrap/es/DropdownItem'
 
 const server = 'http://nuichatbot-1.herokuapp.com'
 
@@ -23,12 +28,22 @@ class Supporter extends Component {
 
         this.convRef.on('child_added', this.updateConversation)
         this.convRef.on('child_changed', this.updateConversation)
+        this.messagesEnd = React.createRef()
 
         this.state = {
             conversations: [],
             open: null,
             current: [],
             text: '',
+            dropdown: false,
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.current.length !== this.state.current.length) {
+            animateScroll.scrollToBottom({
+                containerId: 'MESSAGES'
+            })
         }
     }
 
@@ -97,20 +112,62 @@ class Supporter extends Component {
                 tid: c.$tid,
                 text
             })
-                .then(success => this.setState({
-                    text: '',
-                }))
+                .then(resp => {
+                    const {data} = resp
+                    if (data.error) return alert(data.error)
+                    this.setState({
+                        text: '',
+                    })
+                })
+                .catch(err => alert(err.message || err))
+        })
+            .catch(e => alert(e.message || e))
+    }
+
+    toggle = () => {
+        this.setState({
+            dropdown: !this.state.dropdown
+        })
+    }
+
+    out = () => {
+        firebase.auth().currentUser.getIdToken(true).then((idToken) => {
+            return axios.post(`${server}/pagetuyensinh/staffResetStatus`, {
+                idToken,
+                'tid': this.state.open.$tid,
+            })
+                .then(ok => {
+                    window.location.reload()
+                })
+                .catch(err => alert(err))
+        })
+    }
+
+    greet = () => {
+        return firebase.auth().currentUser.getIdToken(true).then((idToken) => {
+            const c = this.state.open
+            console.log('123')
+
+            axios.post(`${server}/pagetuyensinh/staffSendMessage`, {
+                idToken,
+                tid: c.$tid,
+                text: this.props.user.desc,
+            })
+                .then(resp => {
+                    const {data} = resp
+                    if (data.error) return alert(data.error)
+                })
                 .catch(err => alert(err.message || err))
         })
             .catch(e => alert(e.message || e))
     }
 
     renderConversation = () => {
-        const {current, open} = this.state
+        const {current, open, dropdown} = this.state
 
         return <div className={'card mt-3 mb-3'}>
             <div className={'card-header Title'} onClick={this.onClickConversation(open)}>{this.state.open.name}</div>
-            <div className=" card-body Card">
+            <div className=" card-body Card" id={'MESSAGES'}>
                 {current.map((m, i) => <div key={i} className={'Message'}>
                     <div className={m.page ? 'Ours' : 'Yours'}>
                         <div className={'Textt'}>{m.text}</div>
@@ -119,16 +176,26 @@ class Supporter extends Component {
             </div>
             <div className={'Text'}>
                 <form className={'FormMessage'} onSubmit={this._onSubmit(open)}>
-                    <div className={'Actions'}>
-                        <button>
-                            <Icon>send
-                            </Icon>
-                        </button>
+                    <div style={{
+                        width: '10%'
+                    }}>
+                        < ButtonDropdown isOpen={dropdown} toggle={this.toggle} style={{width: '10%'}}>
+                            <DropdownToggle color={'primary'}><i className='fas fa-bars'></i>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={this.greet}>
+                                    Gửi lời chào hỏi
+                                </DropdownItem>
+                                <DropdownItem onClick={this.out}>
+                                    Kết thúc chat
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
                     </div>
                     <input className={'form-control'} placeholder={'Gửi tin nhắn'} value={this.state.text}
                            onChange={e => this.setState({text: e.target.value})}/>
                     <div className={'SendIcon'}>
-                        <button type={'submit'}>
+                        <button type={'submit'} style={{color: '#fff'}}>
                             <Icon>send
                             </Icon>
                         </button>
@@ -138,15 +205,16 @@ class Supporter extends Component {
         </div>
     }
 
-    render() {
+    render
+    () {
         const {user} = this.props
         const {conversations, open} = this.state
 
         return (
             <div className={'Supporter'}>
-                <AppBar position="static">
+                <AppBar position="static" style={{background: '#3E8C33'}}>
                     <Toolbar>
-                        <Typography variant="h6" color="inherit">SCS</Typography>
+                        <Typography variant="h6" color="inherit">Welcome to SCS</Typography>
                     </Toolbar>
                 </AppBar>
                 <div className={'container mt-3'}>

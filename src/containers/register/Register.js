@@ -67,13 +67,27 @@ class Register extends Component {
                             onChange={this._onChangeInput('name')}
                         />
                         <label htmlFor={'group'}>Mã trường</label>
-                        <input
-                            className={'form-control'}
+                        <select
+                            className="custom-select"
                             value={form.group}
                             id={'group'}
                             onChange={this._onChangeInput('group')}
-                            autoComplete={'off'}
-                        />
+                        >
+                            <option>Chọn một trường</option>
+                            {this.props.groups && Object.keys(this.props.groups).map((g, i) => <option
+                                key={i}
+                                value={g}
+                            >
+                                {this.props.groups[g].name}
+                            </option>)}
+                        </select>
+                        {/*<input*/}
+                            {/*className={'form-control'}*/}
+                            {/*value={form.group}*/}
+                            {/*id={'group'}*/}
+                            {/*onChange={this._onChangeInput('group')}*/}
+                            {/*autoComplete={'off'}*/}
+                        {/*/>*/}
                         <label htmlFor={'desc'}>Lời chào</label>
                         <input
                             className={'form-control'}

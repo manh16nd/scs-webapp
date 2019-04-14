@@ -80,20 +80,25 @@ class App extends Component {
     _getUserInfo = (uid) => {
         firebase.database().ref(DB_PREFIX + '/users/' + uid).once('value')
             .then(snap => {
-                var userData = snap.val() || {}
-                userData.$uid = uid
-                if (!userData.role) {
-                    this.setState({
-                        appState: 'register',
-                        uid,
-                    })
-                } else {
-                    const {role} = userData
-                    this.setState({
-                        appState: role === 1000 ? 'admin' : 'supporter',
-                        user: userData,
-                    })
-                }
+                firebase.database().ref(DB_PREFIX + '/groups').once('value').then(gr => {
+                    var groups = gr.val()
+                    console.log(groups)
+                    var userData = snap.val() || {}
+                    userData.$uid = uid
+                    if (!userData.role) {
+                        this.setState({
+                            appState: 'register',
+                            uid,
+                            groups,
+                        })
+                    } else {
+                        const {role} = userData
+                        this.setState({
+                            appState: role === 1000 ? 'admin' : 'supporter',
+                            user: userData,
+                        })
+                    }
+                })
             })
             .catch(err => {
                 console.log(err)
@@ -151,7 +156,6 @@ class App extends Component {
             ...this.props,
             ...this.state,
         }
-        if (appState === 'new_user') return <NewUser {...combinedProps}/>
         if (appState === 'loading') return <p>loading</p>
         if (appState === 'init') return <Init/>
         if (appState === 'register') return <Register {...combinedProps}/>
