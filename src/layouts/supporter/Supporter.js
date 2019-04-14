@@ -12,7 +12,7 @@ import DropdownToggle from 'reactstrap/es/DropdownToggle'
 import DropdownMenu from 'reactstrap/es/DropdownMenu'
 import DropdownItem from 'reactstrap/es/DropdownItem'
 
-const server = 'http://nuichatbot-1.herokuapp.com'
+const server = 'https://nuichatbot.herokuapp.com'
 
 class Supporter extends Component {
     constructor(props) {
